@@ -1,0 +1,11 @@
+requests
+pandas
+numpy
+scikit-learn
+sentence-transformers
+faiss-cpu
+langchain
+streamlit
+plotly
+dash
+flask
