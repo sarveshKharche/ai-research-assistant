@@ -11,14 +11,15 @@ def rag_pipeline(query):
     query (str): The research query.
     
     Returns:
-    tuple: Indices of the most relevant text chunks and the corresponding documents.
+    tuple: Indices of the most relevant text chunks and the corresponding papers with full metadata.
     """
     # Fetch data from arXiv
     response = fetch_arxiv(query)
     if not response:
         return None
     
-    documents = [paper['summary'] for paper in parse_arxiv_response(response)]
+    papers = parse_arxiv_response(response)
+    documents = [paper['summary'] for paper in papers]
     
     # Chunk documents and generate embeddings
     chunks = []
@@ -42,14 +43,19 @@ def rag_pipeline(query):
     # Map chunk indices to document indices
     doc_indices = [doc_indices[idx] for idx in indices[0]]
     
-    return doc_indices, documents
+    return doc_indices, papers
 
 if __name__ == "__main__":
     query = "What is artificial intelligence?"
     results = rag_pipeline(query)
     if results:
-        doc_indices, documents = results
+        doc_indices, papers = results
         for index in doc_indices:
-            print(f"Document {index + 1}: {documents[index]}")
+            paper = papers[index]
+            print(f"Title: {paper['title']}")
+            print(f"Summary: {paper['summary']}")
+            print(f"Authors: {', '.join(paper['authors'])}")
+            print(f"Published: {paper['published']}")
+            print("-" * 80)
     else:
         print("Failed to fetch data.")

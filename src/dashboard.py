@@ -7,10 +7,32 @@ def main():
     if query:
         results = rag_pipeline(query)
         if results:
-            doc_indices, documents = results
+            doc_indices, papers = results
             st.write(f"Results for query: {query}")
+            
             for index in doc_indices:
-                st.write(f"Document {index + 1}: {documents[index]}")
+                paper = papers[index]
+                # Create a container for each paper
+                with st.container():
+                    st.markdown("---")
+                    # Display title as a header
+                    st.markdown(f"### {paper['title']}")
+                    
+                    # Display authors and publication date
+                    st.markdown(f"**Authors:** {', '.join(paper['authors'])}")
+                    st.markdown(f"**Published:** {paper['published']}")
+                    
+                    # Display abstract
+                    st.markdown("**Abstract:**")
+                    st.write(paper['summary'])
+                    
+                    # Create arXiv link
+                    arxiv_id = paper.get('id', '').split('/')[-1]
+                    if arxiv_id:
+                        arxiv_link = f"https://arxiv.org/abs/{arxiv_id}"
+                        st.markdown(f"[Read full paper on arXiv]({arxiv_link})")
+                    
+                    st.markdown("---")
         else:
             st.write("Failed to fetch data.")
 

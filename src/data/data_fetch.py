@@ -35,6 +35,7 @@ def parse_arxiv_response(response):
     papers = []
     for entry in entries:
         paper = {
+            'id': entry.find('arxiv:id', namespace).text,
             'title': entry.find('arxiv:title', namespace).text,
             'summary': entry.find('arxiv:summary', namespace).text,
             'authors': [author.find('arxiv:name', namespace).text for author in entry.findall('arxiv:author', namespace)],
